@@ -151,10 +151,7 @@
       document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
         
         window.onUnityReady = async function() {
-          while (!connectionWalletResult) {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            }
-            unityInstance.SendMessage('TonConnect', 'AuthenticationCompleted');
+          unityInstance.SendMessage('TonConnect', 'AuthenticationCompleted');
           }
 
       }).catch((message) => {
