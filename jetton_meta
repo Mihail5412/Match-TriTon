@@ -1,0 +1,7 @@
+{
+  "name": "MyToken",
+  "symbol": "MTK",
+  "description": "My custom Jetton token",
+  "image": "https://example.com/logo.png",
+  "decimals": 9
+}
