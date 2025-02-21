@@ -2,6 +2,6 @@
   "name": "MyToken",
   "symbol": "MTK",
   "description": "My custom Jetton token",
-  "image": "https://example.com/logo.png",
+  "image": "https://raw.githubusercontent.com/Mihail5412/Match-TriTon/main/currency_icon.png",
   "decimals": 9
 }
