@@ -55,8 +55,8 @@
       async function convertToUserFriendlyAddress(rawAddress) {
         try {
           logDebugMessage("Converting address: " + rawAddress);
-          const tonweb = new TonWeb();
-          const userFriendly = tonweb.utils.toUserFriendlyAddress(rawAddress);
+          const address = new TonWeb.Address(rawAddress);
+          const userFriendly = address.toString(true, true, true); // User-Friendly формат
           logDebugMessage("Converted address: " + userFriendly);
           return userFriendly;
         } catch (error) {
