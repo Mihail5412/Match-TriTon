@@ -10,12 +10,14 @@
     <script src="https://unpkg.com/tonweb@latest/dist/tonweb.js"></script>
     <style>
       #ton-connect {
-        display: block;
+        display: none; /* Скрываем TonConnect UI */
         position: absolute;
         top: 10px;
         left: 10px;
         z-index: 1000;
       }
+      /* Закомментировали консоль для логов */
+      /*
       #debug-log {
         position: absolute;
         bottom: 10px;
@@ -29,11 +31,21 @@
         overflow: auto;
         font-size: 12px;
       }
+      */
       canvas {
         width: 100vw;
         height: 100vh;
         max-width: 1080px;
         max-height: 1920px;
+      }
+      /* Ориентируем iframe в вертикальном разрешении */
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        background-color: black;
       }
     </style>
   </head>
@@ -55,15 +67,10 @@
     </div>
 
     <div id="ton-connect"></div>
-    <div id="debug-log"></div>
+    <!-- <div id="debug-log"></div> -->
     
     <script>
       function logDebugMessage(message) {
-        var debugLog = document.getElementById("debug-log");
-        var logEntry = document.createElement("div");
-        logEntry.textContent = message;
-        debugLog.appendChild(logEntry);
-        debugLog.scrollTop = debugLog.scrollHeight;
         console.log(message);
       }
       
