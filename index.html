@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="TemplateData/style.css">
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <script src="https://unpkg.com/@ton/tonweb@latest"></script>
+    <style>
+      #ton-connect {
+        display: none;
+      }
+      #debug-log {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px;
+        z-index: 1000;
+        max-width: 300px;
+        overflow: auto;
+      }
+    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -27,14 +43,26 @@
     </div>
 
     <div id="ton-connect"></div>
+    <div id="debug-log"></div>
     
     <script>
+      function logDebugMessage(message) {
+        var debugLog = document.getElementById("debug-log");
+        var logEntry = document.createElement("div");
+        logEntry.textContent = message;
+        debugLog.appendChild(logEntry);
+        debugLog.scrollTop = debugLog.scrollHeight;
+      }
+      
       async function convertToUserFriendlyAddress(rawAddress) {
         try {
+          logDebugMessage("Converting address: " + rawAddress);
           const tonweb = new TonWeb();
-          return tonweb.utils.toUserFriendlyAddress(rawAddress);
+          const userFriendly = tonweb.utils.toUserFriendlyAddress(rawAddress);
+          logDebugMessage("Converted address: " + userFriendly);
+          return userFriendly;
         } catch (error) {
-          console.error("Address conversion error: ", error);
+          logDebugMessage("Address conversion error: " + error);
           return rawAddress;
         }
       }
@@ -109,13 +137,16 @@
           
           window.connectTonWallet = async function() {
             try {
+              logDebugMessage("Connecting to wallet...");
               const connectedWallet = await tonConnectUI.connectWallet();
-              console.log("TON Wallet Connected", connectedWallet);
+              logDebugMessage("Wallet connected: " + JSON.stringify(connectedWallet));
               const rawAddress = connectedWallet.account.address || "error";
+              logDebugMessage("Raw address: " + rawAddress);
               const userFriendlyAddress = await convertToUserFriendlyAddress(rawAddress);
+              logDebugMessage("Final address sent to Unity: " + userFriendlyAddress);
               unityInstance.SendMessage("TonConnect", "OnWalletConnected", userFriendlyAddress);
             } catch (error) {
-              console.error("TON Wallet Connection Error: ", error);
+              logDebugMessage("Wallet connection error: " + error);
               unityInstance.SendMessage("TonConnect", "OnWalletConnected", "error");
             }
           };
