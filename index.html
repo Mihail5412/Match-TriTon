@@ -17,7 +17,8 @@
         color: white;
         padding: 10px;
         z-index: 1000;
-        max-width: 300px;
+        max-width: 400px;
+        height: 200px;
         overflow: auto;
         font-size: 12px;
       }
@@ -50,6 +51,7 @@
         logEntry.textContent = message;
         debugLog.appendChild(logEntry);
         debugLog.scrollTop = debugLog.scrollHeight;
+        console.log(message);
       }
       
       let tonweb;
@@ -136,14 +138,8 @@
           
           window.connectTonWallet = async function() {
             try {
-              logDebugMessage("Connecting to wallet...");
-              const connectedWallet = await tonConnectUI.connectWallet();
-              logDebugMessage("Wallet connected: " + JSON.stringify(connectedWallet));
-              const rawAddress = connectedWallet.account.address || "error";
-              logDebugMessage("Raw address: " + rawAddress);
-              const userFriendlyAddress = convertToUserFriendlyAddress(rawAddress);
-              logDebugMessage("Final address sent to Unity: " + userFriendlyAddress);
-              unityInstance.SendMessage("TonConnect", "OnWalletConnected", userFriendlyAddress);
+              logDebugMessage("Skipping TonConnect for now to test Unity...");
+              unityInstance.SendMessage("TonConnect", "OnWalletConnected", "skipped");
             } catch (error) {
               logDebugMessage("Wallet connection error: " + error);
               unityInstance.SendMessage("TonConnect", "OnWalletConnected", "error");
@@ -151,7 +147,7 @@
           };
           
         }).catch((message) => {
-          alert("Unity Load Error: " + message);
+          logDebugMessage("Unity Load Error: " + message);
         });
       };
 
