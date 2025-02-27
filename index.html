@@ -86,7 +86,7 @@
         try {
           if (!tonweb) loadTonWeb();
           logDebugMessage("Converting address: " + rawAddress);
-          const userFriendly = tonweb.utils.toUserFriendlyAddress(rawAddress);
+          const userFriendly = new tonweb.utils.Address(rawAddress).toString(true, true, false);
           logDebugMessage("Converted address: " + userFriendly);
           return userFriendly;
         } catch (error) {
