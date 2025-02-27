@@ -7,8 +7,10 @@
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-    <script src="https://unpkg.com/tonweb@latest"></script>
     <style>
+      #ton-connect {
+        display: none;
+      }
       #debug-log {
         position: absolute;
         top: 10px;
@@ -52,11 +54,25 @@
         debugLog.scrollTop = debugLog.scrollHeight;
       }
       
+      let tonweb;
+      async function loadTonWeb() {
+        if (!tonweb) {
+          try {
+            logDebugMessage("Loading TonWeb...");
+            const TonWebModule = await import("https://unpkg.com/tonweb@latest/dist/tonweb.js");
+            tonweb = new TonWebModule.default();
+            logDebugMessage("TonWeb loaded successfully.");
+          } catch (error) {
+            logDebugMessage("TonWeb loading failed: " + error);
+          }
+        }
+      }
+      
       async function convertToUserFriendlyAddress(rawAddress) {
         try {
+          await loadTonWeb();
           logDebugMessage("Converting address: " + rawAddress);
-          const address = new TonWeb.Address(rawAddress);
-          const userFriendly = address.toString(true, true, true); // User-Friendly формат
+          const userFriendly = tonweb.utils.toUserFriendlyAddress(rawAddress);
           logDebugMessage("Converted address: " + userFriendly);
           return userFriendly;
         } catch (error) {
@@ -102,18 +118,6 @@
         productVersion: "1.0",
         showBanner: unityShowBanner,
       };
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        container.className = "unity-mobile";
-        canvas.className = "unity-mobile";
-      } else {
-        canvas.style.width = "640px";
-        canvas.style.height = "360px";
-      }
 
       loadingBar.style.display = "block";
 
