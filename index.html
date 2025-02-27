@@ -148,8 +148,14 @@
           
           window.connectTonWallet = async function() {
             try {
-              logDebugMessage("Skipping TonConnect for now to test Unity...");
-              unityInstance.SendMessage("TonConnect", "OnWalletConnected", "skipped");
+              logDebugMessage("Connecting to wallet...");
+              const connectedWallet = await tonConnectUI.connectWallet();
+              logDebugMessage("Wallet connected: " + JSON.stringify(connectedWallet));
+              const rawAddress = connectedWallet.account.address || "error";
+              logDebugMessage("Raw address: " + rawAddress);
+              const userFriendlyAddress = convertToUserFriendlyAddress(rawAddress);
+              logDebugMessage("Final address sent to Unity: " + userFriendlyAddress);
+              unityInstance.SendMessage("TonConnect", "OnWalletConnected", userFriendlyAddress);
             } catch (error) {
               logDebugMessage("Wallet connection error: " + error);
               unityInstance.SendMessage("TonConnect", "OnWalletConnected", "error");
