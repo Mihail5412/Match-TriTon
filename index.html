@@ -88,17 +88,19 @@
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
           };
+          
+          const tonConnect = new TONConnect();
           window.connectTonWallet = async function() {
             try {
-              const tonConnect = new TONConnect();
-              await tonConnect.connectWallet();
-              console.log("TON Wallet Connected");
-              unityInstance.SendMessage("TonConnect", "OnWalletConnected", "success");
+              const connected = await tonConnect.connect();
+              console.log("TON Wallet Connected", connected);
+              unityInstance.SendMessage("TonConnect", "OnWalletConnected", connected.address || "success");
             } catch (error) {
               console.error("TON Wallet Connection Error: ", error);
               unityInstance.SendMessage("TonConnect", "OnWalletConnected", "error");
             }
           };
+          
         }).catch((message) => {
           alert(message);
         });
