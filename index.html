@@ -7,6 +7,12 @@
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <script src="https://unpkg.com/@ton/tonweb@latest"></script>
+    <style>
+      #ton-connect {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -28,6 +34,16 @@
     <div id="ton-connect"></div>
     
     <script>
+      async function convertToUserFriendlyAddress(rawAddress) {
+        try {
+          const tonweb = new TonWeb();
+          return tonweb.utils.toUserFriendlyAddress(rawAddress);
+        } catch (error) {
+          console.error("Address conversion error: ", error);
+          return rawAddress;
+        }
+      }
+
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
@@ -100,8 +116,9 @@
             try {
               const connectedWallet = await tonConnectUI.connectWallet();
               console.log("TON Wallet Connected", connectedWallet);
-              const walletAddress = connectedWallet.account.address || "error";
-              unityInstance.SendMessage("TonConnect", "OnWalletConnected", walletAddress);
+              const rawAddress = connectedWallet.account.address || "error";
+              const userFriendlyAddress = await convertToUserFriendlyAddress(rawAddress);
+              unityInstance.SendMessage("TonConnect", "OnWalletConnected", userFriendlyAddress);
             } catch (error) {
               console.error("TON Wallet Connection Error: ", error);
               unityInstance.SendMessage("TonConnect", "OnWalletConnected", "error");
